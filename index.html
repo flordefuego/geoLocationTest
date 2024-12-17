@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time GPS Tracking</title>
+</head>
+<body>
+    <h1>hello</h1>
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+        ws.onopen = () => {
+            console.log('Connected to WebSocket server');
+        };
+        ws.onmessage = (event) => {
+            console.log(`Received data: ${event.data}`);
+        };
+
+
+        // Simulate GPS data sending
+        function sendGpsData() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const gpsData = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        timestamp: position.timestamp
+                    };
+                    ws.send(JSON.stringify(gpsData));
+                });
+            }
+        }
+
+        setInterval(sendGpsData, 1000); // Send GPS data every second
+    </script>
+</body>
+</html>
